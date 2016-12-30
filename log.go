@@ -33,7 +33,7 @@ type Record struct {
 }
 
 func (r *Record) String() string {
-	return fmt.Sprintf("%s [%s] <%s> %s\n", r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+	return fmt.Sprintf("%s \r [%s] \r <%s>  \r %s\n", r.time, LEVEL_FLAGS[r.level], r.code, r.info)
 }
 
 type Writer interface {
@@ -71,7 +71,7 @@ func NewLogger() *Logger {
 	l.tunnel = make(chan *Record, tunnel_size_default)
 	l.c = make(chan bool, 1)
 	l.level = DEBUG
-	l.layout = "2006/01/02 15:04:05"
+	l.layout = "2006-01-02 15:04:05"
 
 	go boostrapLogWriter(l)
 

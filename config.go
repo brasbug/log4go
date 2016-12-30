@@ -20,6 +20,7 @@ type LogConfig struct {
 	Level string            `json:"LogLevel"`
 	FW    ConfFileWriter    `json:"FileWriter"`
 	CW    ConfConsoleWriter `json:"ConsoleWriter"`
+	Layout string 		`json:"Layout"`
 }
 
 func SetupLogWithConf(file string) (err error) {
@@ -41,6 +42,10 @@ func SetupLogWithConf(file string) (err error) {
 		w := NewConsoleWriter()
 		w.SetColor(lc.CW.Color)
 		Register(w)
+	}
+
+	if  len(lc.Layout) > 0 {
+		SetLayout(lc.Layout)
 	}
 
 	switch lc.Level {
