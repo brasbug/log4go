@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"strings"
 )
 
 type ConfFileWriter struct {
@@ -48,7 +49,7 @@ func SetupLogWithConf(file string) (err error) {
 		SetLayout(lc.Layout)
 	}
 
-	switch lc.Level {
+	switch strings.ToLower(lc.Level) {
 	case "debug":
 		SetLevel(DEBUG)
 
