@@ -33,7 +33,7 @@ type Record struct {
 }
 
 func (r *Record) String() string {
-	return fmt.Sprintf("%s \r [%s] \r <%s>  \r %s\n", r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+	return fmt.Sprintf("%s \t [%s] \t <%s>  \t %s\n", r.time, LEVEL_FLAGS[r.level], r.code, r.info)
 }
 
 type Writer interface {
