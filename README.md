@@ -16,5 +16,6 @@ func SetLog() {
 }
 ```
 
-```		log4go.Warn(err.Error())
+```		
+log4go.Warn(err.Error())
 ```
