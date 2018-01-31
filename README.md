@@ -23,4 +23,3 @@ log4go.Info("info need log")
 ```
 ![log4go](http://7xqjzu.com1.z0.glb.clouddn.com/1517409614395.jpg)
 
-<img src="http://7xqjzu.com1.z0.glb.clouddn.com/1517409614395.jpg" width = "100%" />
