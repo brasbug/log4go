@@ -18,4 +18,6 @@ func SetLog() {
 
 ```		
 log4go.Warn(err.Error())
+log4go.Info("info need log")
+
 ```
