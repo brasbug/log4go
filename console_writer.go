@@ -42,6 +42,9 @@ func NewConsoleWriter() *ConsoleWriter {
 }
 
 func (w *ConsoleWriter) Write(r *Record) error {
+	if r.nshow {
+		return nil
+	}
 	if w.color {
 		fmt.Fprint(os.Stdout, ((*colorRecord)(r)).String())
 	} else {
