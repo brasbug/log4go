@@ -18,7 +18,7 @@ var (
 const (
 	DEBUG = iota
 	INFO
-	INFOO      //debug not show in terminal
+	INFOO //debug not show in terminal
 	WARNING
 	ERROR
 	FATAL
@@ -30,7 +30,7 @@ type Record struct {
 	time  string
 	code  string
 	info  string
-	nshow  bool
+	nshow bool
 	level int
 }
 
@@ -106,6 +106,7 @@ func (l *Logger) Warn(fmt string, args ...interface{}) {
 func (l *Logger) Info(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(INFO, fmt, args...)
 }
+
 func (l *Logger) Infoo(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(INFOO, fmt, args...)
 }
@@ -117,7 +118,6 @@ func (l *Logger) Error(fmt string, args ...interface{}) {
 func (l *Logger) Fatal(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(FATAL, fmt, args...)
 }
-
 
 func (l *Logger) Close() {
 	close(l.tunnel)
@@ -256,6 +256,10 @@ func Warn(fmt string, args ...interface{}) {
 
 func Info(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(INFO, fmt, args...)
+}
+
+func Infoo(fmt string, args ...interface{}) {
+	logger_default.deliverRecordToWriter(INFOO, fmt, args...)
 }
 
 func Error(fmt string, args ...interface{}) {

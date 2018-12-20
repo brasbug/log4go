@@ -13,7 +13,7 @@ func (r *colorRecord) String() string {
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[34m%s\033[0m] \033[47;30m%s\033[0m %s\n",
 			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
 
-	case INFO:
+	case INFO,INFOO:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[32m%s\033[0m] \033[47;30m%s\033[0m %s\n",
 			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
 
