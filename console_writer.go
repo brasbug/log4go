@@ -13,7 +13,7 @@ func (r *colorRecord) String() string {
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[34m%s\033[0m] \033[47;30m%s\033[0m %s\n",
 			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
-	case INFO,INFOO:
+	case INFO:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[32m%s\033[0m] \033[47;30m%s\033[0m %s\n",
 			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
@@ -29,7 +29,6 @@ func (r *colorRecord) String() string {
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[35m%s\033[0m] \033[47;30m%s\033[0m %s\n",
 			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 	}
-
 	return ""
 }
 
@@ -42,15 +41,6 @@ func NewConsoleWriter() *ConsoleWriter {
 }
 
 func (w *ConsoleWriter) Write(r *Record) error {
-	if r.NoLog {
-		if w.color {
-			fmt.Printf(((*colorRecord)(r)).String())
-		} else {
-			fmt.Printf(r.String())
-		}
-		fmt.Println(((*colorRecord)(r)).String())
-		return nil
-	}
 	if w.color {
 		fmt.Fprint(os.Stdout, ((*colorRecord)(r)).String())
 	} else {

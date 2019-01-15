@@ -18,7 +18,6 @@ var (
 const (
 	DEBUG = iota
 	INFO
-	INFOO //debug not show in terminal
 	WARNING
 	ERROR
 	FATAL
@@ -62,13 +61,6 @@ type Logger struct {
 	lastTimeStr string
 	c           chan bool
 	layout      string
-	callback    LoggerCallbackFunc
-}
-
-func SetLoggerCallBackFunc(callbackFunc LoggerCallbackFunc)  {
-	if logger_default != nil {
-		logger_default.callback = callbackFunc
-	}
 }
 
 
@@ -77,16 +69,13 @@ func NewLogger() *Logger {
 		takeup = true
 		return logger_default
 	}
-
 	l := new(Logger)
 	l.writers = make([]Writer, 0, 2)
 	l.tunnel = make(chan *Record, tunnel_size_default)
 	l.c = make(chan bool, 1)
 	l.level = DEBUG
 	l.layout = "2006-01-02 15:04:05"
-
 	go boostrapLogWriter(l)
-
 	return l
 }
 
@@ -117,10 +106,6 @@ func (l *Logger) Info(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(INFO, fmt, args...)
 }
 
-func (l *Logger) Infoo(fmt string, args ...interface{}) {
-	l.deliverRecordToWriter(INFOO, fmt, args...)
-}
-
 func (l *Logger) Error(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(ERROR, fmt, args...)
 }
@@ -132,7 +117,6 @@ func (l *Logger) Fatal(fmt string, args ...interface{}) {
 func (l *Logger) Close() {
 	close(l.tunnel)
 	<-l.c
-
 	for _, w := range l.writers {
 		if f, ok := w.(Flusher); ok {
 			if err := f.Flush(); err != nil {
@@ -173,13 +157,7 @@ func (l *Logger) deliverRecordToWriter(level int, format string, args ...interfa
 	r.Code = code
 	r.Time = l.lastTimeStr
 	r.Level = level
-
-	if l.callback != nil {
-		l.callback(*r)
-		r.NoLog = true
-	}
 	l.tunnel <- r
-
 }
 
 func boostrapLogWriter(logger *Logger) {
@@ -213,7 +191,6 @@ func boostrapLogWriter(logger *Logger) {
 				logger.c <- true
 				return
 			}
-
 			for _, w := range logger.writers {
 				if err := w.Write(r); err != nil {
 					log.Println(err)
@@ -271,9 +248,6 @@ func Info(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(INFO, fmt, args...)
 }
 
-func Infoo(fmt string, args ...interface{}) {
-	logger_default.deliverRecordToWriter(INFOO, fmt, args...)
-}
 
 func Error(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(ERROR, fmt, args...)
