@@ -8,26 +8,26 @@ import (
 type colorRecord Record
 
 func (r *colorRecord) String() string {
-	switch r.level {
+	switch r.Level {
 	case DEBUG:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[34m%s\033[0m] \033[47;30m%s\033[0m %s\n",
-			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
 	case INFO,INFOO:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[32m%s\033[0m] \033[47;30m%s\033[0m %s\n",
-			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
 	case WARNING:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[33m%s\033[0m] \033[47;30m%s\033[0m %s\n",
-			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
 	case ERROR:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[31m%s\033[0m] \033[47;30m%s\033[0m %s\n",
-			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 
 	case FATAL:
 		return fmt.Sprintf("\033[36m%s\033[0m [\033[35m%s\033[0m] \033[47;30m%s\033[0m %s\n",
-			r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+			r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 	}
 
 	return ""
@@ -42,7 +42,13 @@ func NewConsoleWriter() *ConsoleWriter {
 }
 
 func (w *ConsoleWriter) Write(r *Record) error {
-	if r.nshow {
+	if r.NoLog {
+		if w.color {
+			fmt.Printf(((*colorRecord)(r)).String())
+		} else {
+			fmt.Printf(r.String())
+		}
+		fmt.Println(((*colorRecord)(r)).String())
 		return nil
 	}
 	if w.color {

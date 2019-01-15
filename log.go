@@ -27,15 +27,15 @@ const (
 const tunnel_size_default = 1024
 
 type Record struct {
-	time  string
-	code  string
-	info  string
-	nshow bool
-	level int
+	Time  string
+	Code  string
+	Info  string
+	Level int
+	NoLog bool
 }
 
 func (r *Record) String() string {
-	return fmt.Sprintf("%s \t [%s] \t <%s>  \t %s\n", r.time, LEVEL_FLAGS[r.level], r.code, r.info)
+	return fmt.Sprintf("%s \t [%s] \t <%s>  \t %s\n", r.Time, LEVEL_FLAGS[r.Level], r.Code, r.Info)
 }
 
 type Writer interface {
@@ -52,6 +52,8 @@ type Flusher interface {
 	Flush() error
 }
 
+type LoggerCallbackFunc func(record Record)
+
 type Logger struct {
 	writers     []Writer
 	tunnel      chan *Record
@@ -60,7 +62,15 @@ type Logger struct {
 	lastTimeStr string
 	c           chan bool
 	layout      string
+	callback    LoggerCallbackFunc
 }
+
+func SetLoggerCallBackFunc(callbackFunc LoggerCallbackFunc)  {
+	if logger_default != nil {
+		logger_default.callback = callbackFunc
+	}
+}
+
 
 func NewLogger() *Logger {
 	if logger_default != nil && takeup == false {
@@ -159,14 +169,17 @@ func (l *Logger) deliverRecordToWriter(level int, format string, args ...interfa
 	}
 
 	r := recordPool.Get().(*Record)
-	r.info = inf
-	r.code = code
-	r.time = l.lastTimeStr
-	r.level = level
-	if level == INFOO {
-		r.nshow = true
+	r.Info = inf
+	r.Code = code
+	r.Time = l.lastTimeStr
+	r.Level = level
+
+	if l.callback != nil {
+		l.callback(*r)
+		r.NoLog = true
 	}
 	l.tunnel <- r
+
 }
 
 func boostrapLogWriter(logger *Logger) {
