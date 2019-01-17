@@ -167,7 +167,6 @@ func (l *Logger) deliverRecordExtToWriter(ext interface{},level int, format stri
 	if level < l.level {
 		return
 	}
-
 	if format != "" {
 		inf = fmt.Sprintf(format, args...)
 	} else {
