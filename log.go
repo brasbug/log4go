@@ -30,7 +30,7 @@ type Record struct {
 	Code  string
 	Info  string
 	Level int
-	NoLog bool
+	Ext interface{}
 }
 
 func (r *Record) String() string {
@@ -160,6 +160,42 @@ func (l *Logger) deliverRecordToWriter(level int, format string, args ...interfa
 	l.tunnel <- r
 }
 
+
+func (l *Logger) deliverRecordExtToWriter(ext interface{},level int, format string, args ...interface{}) {
+	var inf, code string
+
+	if level < l.level {
+		return
+	}
+
+	if format != "" {
+		inf = fmt.Sprintf(format, args...)
+	} else {
+		inf = fmt.Sprint(args...)
+	}
+
+	// source code, file and line num
+	_, file, line, ok := runtime.Caller(2)
+	if ok {
+		code = path.Base(file) + ":" + strconv.Itoa(line)
+	}
+
+	// format time
+	now := time.Now()
+	if now.Unix() != l.lastTime {
+		l.lastTime = now.Unix()
+		l.lastTimeStr = now.Format(l.layout)
+	}
+
+	r := recordPool.Get().(*Record)
+	r.Info = inf
+	r.Code = code
+	r.Time = l.lastTimeStr
+	r.Level = level
+	r.Ext = ext
+	l.tunnel <- r
+}
+
 func boostrapLogWriter(logger *Logger) {
 	if logger == nil {
 		panic("logger is nil")
@@ -256,6 +292,28 @@ func Error(fmt string, args ...interface{}) {
 func Fatal(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(FATAL, fmt, args...)
 }
+
+
+func DebugExt(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, DEBUG, fmt, args...)
+}
+
+func WarnExt(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, WARNING, fmt, args...)
+}
+
+func InfoExt(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, INFO, fmt, args...)
+}
+
+func ErrorExt(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, ERROR, fmt, args...)
+}
+
+func FatalExt(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, FATAL, fmt, args...)
+}
+
 
 func Register(w Writer) {
 	logger_default.Register(w)
