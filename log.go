@@ -11,13 +11,14 @@ import (
 )
 
 var (
-	LEVEL_FLAGS = [...]string{"DEBUG", "INFO", "WARN", "ERROR", "FATAL"}
+	LEVEL_FLAGS = [...]string{"DEBUG", "INFO","NEVERShow", "WARN", "ERROR", "FATAL"}
 	recordPool  *sync.Pool
 )
 
 const (
 	DEBUG = iota
 	INFO
+	NEVERShow
 	WARNING
 	ERROR
 	FATAL
@@ -75,6 +76,7 @@ func NewLogger() *Logger {
 	l.c = make(chan bool, 1)
 	l.level = DEBUG
 	l.layout = "2006-01-02 15:04:05"
+	logger_default = l
 	go boostrapLogWriter(l)
 	return l
 }
@@ -305,6 +307,9 @@ func InfoExt(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, INFO, fmt, args...)
 }
 
+func NeverShow(ext interface{},fmt string, args ...interface{}) {
+	logger_default.deliverRecordExtToWriter(ext, NEVERShow, fmt, args...)
+}
 func ErrorExt(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, ERROR, fmt, args...)
 }
