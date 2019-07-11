@@ -96,23 +96,23 @@ func (l *Logger) SetLayout(layout string) {
 	l.layout = layout
 }
 
-func (l *Logger) Debug(fmt string, args ...interface{}) {
+func (l *Logger) DebugF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(DEBUG, fmt, args...)
 }
 
-func (l *Logger) Warn(fmt string, args ...interface{}) {
+func (l *Logger) WarnF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(WARNING, fmt, args...)
 }
 
-func (l *Logger) Info(fmt string, args ...interface{}) {
+func (l *Logger) InfoF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(INFO, fmt, args...)
 }
 
-func (l *Logger) Error(fmt string, args ...interface{}) {
+func (l *Logger) ErrorF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(ERROR, fmt, args...)
 }
 
-func (l *Logger) Fatal(fmt string, args ...interface{}) {
+func (l *Logger) FatalF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(FATAL, fmt, args...)
 }
 
@@ -273,48 +273,71 @@ func SetLayout(layout string) {
 	logger_default.layout = layout
 }
 
-func Debug(fmt string, args ...interface{}) {
+
+func Debug(args ...interface{}) {
+	logger_default.deliverRecordToWriter(DEBUG, "", args...)
+}
+
+func Warn(args ...interface{}) {
+	logger_default.deliverRecordToWriter(WARNING, "", args...)
+}
+
+func Info(args ...interface{}) {
+	logger_default.deliverRecordToWriter(INFO, "", args...)
+}
+
+
+func Error(args ...interface{}) {
+	logger_default.deliverRecordToWriter(ERROR, "", args...)
+}
+
+func Fatal(args ...interface{}) {
+	logger_default.deliverRecordToWriter(FATAL, "", args...)
+}
+
+
+func DebugF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(DEBUG, fmt, args...)
 }
 
-func Warn(fmt string, args ...interface{}) {
+func WarnF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(WARNING, fmt, args...)
 }
 
-func Info(fmt string, args ...interface{}) {
+func InfoF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(INFO, fmt, args...)
 }
 
 
-func Error(fmt string, args ...interface{}) {
+func ErrorF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(ERROR, fmt, args...)
 }
 
-func Fatal(fmt string, args ...interface{}) {
+func FatalF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(FATAL, fmt, args...)
 }
 
 
-func DebugExt(ext interface{},fmt string, args ...interface{}) {
+func DebugExtF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, DEBUG, fmt, args...)
 }
 
-func WarnExt(ext interface{},fmt string, args ...interface{}) {
+func WarnExtF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, WARNING, fmt, args...)
 }
 
-func InfoExt(ext interface{},fmt string, args ...interface{}) {
+func InfoExtF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, INFO, fmt, args...)
 }
 
-func NeverShow(ext interface{},fmt string, args ...interface{}) {
+func NeverShowF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, NEVERShow, fmt, args...)
 }
-func ErrorExt(ext interface{},fmt string, args ...interface{}) {
+func ErrorExtF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, ERROR, fmt, args...)
 }
 
-func FatalExt(ext interface{},fmt string, args ...interface{}) {
+func FatalExtF(ext interface{},fmt string, args ...interface{}) {
 	logger_default.deliverRecordExtToWriter(ext, FATAL, fmt, args...)
 }
 
