@@ -318,11 +318,9 @@ func InfoF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(INFO, fmt, args...)
 }
 
-
 func InfoFNL(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriterCodeLine(INFO, fmt,false, args...)
 }
-
 
 func ErrorF(fmt string, args ...interface{}) {
 	logger_default.deliverRecordToWriter(ERROR, fmt, args...)
