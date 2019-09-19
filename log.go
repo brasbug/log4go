@@ -108,6 +108,10 @@ func (l *Logger) InfoF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(INFO, fmt, args...)
 }
 
+func (l *Logger) InfoFNL(fmt string, args ...interface{}) {
+	l.deliverRecordToWriterCodeLine(INFO, fmt,false, args...)
+}
+
 func (l *Logger) ErrorF(fmt string, args ...interface{}) {
 	l.deliverRecordToWriter(ERROR, fmt, args...)
 }
@@ -129,6 +133,11 @@ func (l *Logger) Close() {
 }
 
 func (l *Logger) deliverRecordToWriter(level int, format string, args ...interface{}) {
+	l.deliverRecordToWriterCodeLine(level,format,true,args...)
+}
+
+
+func (l *Logger) deliverRecordToWriterCodeLine(level int, format string,codeLine bool, args ...interface{}) {
 	var inf, code string
 
 	if level < l.level {
@@ -140,12 +149,14 @@ func (l *Logger) deliverRecordToWriter(level int, format string, args ...interfa
 	} else {
 		inf = fmt.Sprint(args...)
 	}
-
-	// source code, file and line num
-	_, file, line, ok := runtime.Caller(2)
-	if ok {
-		code = path.Base(file) + ":" + strconv.Itoa(line)
+	if codeLine {
+		// source code, file and line num
+		_, file, line, ok := runtime.Caller(2)
+		if ok {
+			code = path.Base(file) + ":" + strconv.Itoa(line)
+		}
 	}
+
 
 	// format time
 	now := time.Now()
