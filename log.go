@@ -133,7 +133,35 @@ func (l *Logger) Close() {
 }
 
 func (l *Logger) deliverRecordToWriter(level int, format string, args ...interface{}) {
-	l.deliverRecordToWriterCodeLine(level,format,true,args...)
+	var inf, code string
+
+	if level < l.level {
+		return
+	}
+
+	if format != "" {
+		inf = fmt.Sprintf(format, args...)
+	} else {
+		inf = fmt.Sprint(args...)
+	}
+	// source code, file and line num
+	_, file, line, ok := runtime.Caller(2)
+	if ok {
+		code = path.Base(file) + ":" + strconv.Itoa(line)
+	}
+	// format time
+	now := time.Now()
+	if now.Unix() != l.lastTime {
+		l.lastTime = now.Unix()
+		l.lastTimeStr = now.Format(l.layout)
+	}
+
+	r := recordPool.Get().(*Record)
+	r.Info = inf
+	r.Code = code
+	r.Time = l.lastTimeStr
+	r.Level = level
+	l.tunnel <- r
 }
 
 
